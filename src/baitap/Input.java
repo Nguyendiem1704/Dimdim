@@ -2,9 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package CheckValidator;
+package util;
 
-import static CheckValidator.DataValidator.checkRegex;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -13,15 +12,7 @@ import java.util.Scanner;
  * @author Admin
  */
 public class Input {
-
-    /**
-     *
-     * @param enter_ID_
-     * @param customer_id_regex
-     * @return
-     */
-     
-    private Input(){};
+     private Input(){};
     static Scanner scanner = new Scanner(System.in);
     private static final String error_message = "Wrong Input ! Please Re-enter ";
     private static final String regex_not_match = "Input Not Valid ! Please Re-enter ";

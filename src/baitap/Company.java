@@ -4,14 +4,12 @@
  */
 package Controller;
 
-import Model.Customer;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import Model.Doctor;
+import Model.Employee;
+import Model.Nurse;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -19,45 +17,38 @@ import java.util.function.Predicate;
  * @author Admin
  */
 public class Company {
-    public ArrayList<Customer> arrCustomer = new ArrayList<>();
-    public void addCustomer(Customer customer){
-        arrCustomer.add(customer);
-    }
-    
-    public void displayCustomer(){
-        arrCustomer.forEach(c -> System.out.println(c));
-    }
-    
-    public int totalCustomer(){
-        return arrCustomer.size();
-    }
-    
-   public void removeCustomer(Customer customer) {
-    arrCustomer.remove(customer);
-}
+    private List<Employee> employees;
 
-    
-    
-    
-    public ArrayList<Customer> search(Predicate<Customer> p){
-        ArrayList<Customer> searchResults = new ArrayList<>();
-        for (Customer customer : arrCustomer){
-            if (p.test(customer)){
-                searchResults.add(customer);
+    public Company() {
+        employees = new ArrayList<>();
+    }
+
+    public void createEmployee(int employeeType, String name, String phone, String email, float coefficientSalary, int level, String major, float positionAllowance, int overtimeHours) {
+        int id = employees.size() + 1;
+        Employee employee;
+        if (employeeType == 1) {
+            employee = new Doctor(id, name, phone, email, coefficientSalary, level, major, positionAllowance);
+        } else {
+            employee = new Nurse(id, name, phone, email, coefficientSalary, overtimeHours);
+        }
+        employees.add(employee);
+    }
+
+    public List<Employee> displayEmployees() {
+        return employees;
+    }
+
+    public Optional<Employee> getEmployeeWithHighestSalary() {
+        return employees.stream().max((e1, e2) -> Float.compare(e1.calculateTotalSalary(), e2.calculateTotalSalary()));
+    }
+
+     public ArrayList<Employee> search (Predicate<Employee> e){
+        ArrayList<Employee> searchResults = new ArrayList<>();
+        for (Employee employee : employees){
+            if (e.test(employee)){
+                searchResults.add(employee);
             } 
         }
         return searchResults;
-    }
-    
-    public void updateCustomerDetails(String customerID, String newPhone, String newDateOfBirth) {
-        for (Customer customer : arrCustomer) {
-            if (customer.getCustomerID().equals(customerID)) {
-                customer.setPhone(newPhone);
-                customer.setDateOfBirth(newDateOfBirth);
-                System.out.println("Customer details updated successfully.");
-                return;
-            }
-        }
-        System.out.println("Customer not found with ID: " + customerID);
     }
 }

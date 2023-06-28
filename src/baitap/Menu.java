@@ -4,8 +4,7 @@
  */
 package View;
 
-import Model.Customer;
-import java.util.ArrayList;
+import Controller.CompanyManagement;
 import java.util.Scanner;
 
 /**
@@ -13,56 +12,46 @@ import java.util.Scanner;
  * @author Admin
  */
 public class Menu {
+    private CompanyManagement companyManagement;
 
-    static Scanner scanner = new Scanner(System.in);
-    static CompanyManagement companyManagement = new CompanyManagement();
-    private ArrayList<Customer> arrcustomer;
+    public Menu() {
+        companyManagement = new CompanyManagement();
+    }
 
     public void runApplication() {
-        int choice = 0;
-        while (true) {
-            System.out.println("______________________ COMPANY MANAGEMENT APPLICATION _________________________");
-            System.out.println("1. Display all customers.");
-            System.out.println("2. Add new customer.");
-            System.out.println("3. Search customer.");
-            System.out.println("4. Write data to file.");
-            System.out.println("5. Delete a customer by ID.");
-            System.out.println("6. Update phone and date of birth.");
-            System.out.println("7. Exit.");
-            System.out.println("What is your choice ?");
-            try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Wrong input! Please re-enter.");
-                continue;
-            }
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        do {
+            System.out.println("________________HOSPITAL________");
+            System.out.println("1. Create employee");
+            System.out.println("2. Display employee information");
+            System.out.println("3. Display employee information has the highest salary");
+            System.out.println("4. Search by employee name");
+            System.out.println("5. Exit");
+            System.out.print("Please enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); 
 
             switch (choice) {
                 case 1:
-                    companyManagement.displayCustomer();
+                    companyManagement.createEmployee();
                     break;
                 case 2:
-                    companyManagement.addCustomer();
+                    companyManagement.viewAllEmployeeInformation();
                     break;
                 case 3:
-                    companyManagement.searchCustomer();
+                    companyManagement.viewEmployeeWithHighestTotalSalary();
                     break;
                 case 4:
-                    
+                    companyManagement.searchEmployeesByName();
                     break;
                 case 5:
-                    companyManagement.deleteCustomer();
+                    System.out.println("Exit.");
                     break;
-                case 6:
-                    companyManagement.updateCustomerDetails();
-                    break;
-                case 7:
-                    System.out.println("Exiting the program...");
-                    return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
                     break;
             }
-        }
+        } while (choice != 5);
     }
 }

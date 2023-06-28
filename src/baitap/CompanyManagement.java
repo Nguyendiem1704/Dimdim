@@ -2,170 +2,112 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package View;
+package Controller;
 
-import CheckValidator.DataValidator;
-import static CheckValidator.DataValidator.Regex_number;
-import static CheckValidator.DataValidator.date_format;
-import static CheckValidator.DataValidator.date_regex;
-import CheckValidator.Input;
-import static CheckValidator.Input.inputString;
-import Controller.Company;
-import Model.Customer;
+import Model.Doctor;
+import Model.Employee;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+import static util.Input.inputString;
 
 /**
  *
  * @author Admin
  */
 public class CompanyManagement {
-
-    static Company company = new Company();
-    static ArrayList<Customer> arrCustomer = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
+    private Company company;
 
-    public void addCustomer() {
-        System.out.println("_______ADD NEW CUSTOMER_________");
-        String customerID = Input.inputString("Enter ID: ", DataValidator.customer_id_regex);
-        String name = Input.inputString("Enter Name");
-        String phone = Input.inputString("Phone Number (10 numbers)", DataValidator.phone_regex);
-        System.out.println("Enter date birth (dd/mm/yyyy): ");
-        String dateOfBirth = scanner.nextLine();
-        if (!DataValidator.validateDateOfBirth(dateOfBirth)) {
-            System.out.println("Invalid Date of Birth format.");
-            return;
+    public CompanyManagement() {
+        company = new Company();
+    }
+
+    public void createDoctor(String name, String phone, String email, float coefficientSalary, int level, String major, float positionAllowance) {
+        company.createEmployee(1, name, phone, email, coefficientSalary, level, major, positionAllowance, 0);
+    }
+    public void createNurse(String name, String phone, String email, float coefficientSalary, int overtimeHours) {
+        company.createEmployee(2, name, phone, email, coefficientSalary, 0, "", 0, overtimeHours);
+    }
+    public void createEmployee() {
+        System.out.print("Choose 1 to create Doctor, 2 to create Nurse: ");
+        int employeeType = scanner.nextInt();
+        scanner.nextLine(); 
+
+        System.out.print("Enter employee name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter employee phone: ");
+        String phone = scanner.nextLine();
+
+        System.out.print("Enter employee email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Enter employee coefficients salary: ");
+        float coefficientSalary = scanner.nextFloat();
+        scanner.nextLine(); 
+
+        if (employeeType == 1) {
+            System.out.print("Enter employee level: ");
+            int level = scanner.nextInt();
+            scanner.nextLine(); 
+
+            System.out.print("Enter employee major: ");
+            String major = scanner.nextLine();
+
+            System.out.print("Enter employee position Allowance: ");
+            float positionAllowance = scanner.nextFloat();
+            scanner.nextLine(); 
+
+            createDoctor(name, phone, email, coefficientSalary, level, major, positionAllowance);
+        } else {
+            System.out.print("Enter employee overtime hours: ");
+            int overtimeHours = scanner.nextInt();
+            scanner.nextLine();
+
+            createNurse(name, phone, email, coefficientSalary, overtimeHours);
         }
-        Customer customers = new Customer(customerID, name, phone, dateOfBirth);
-        company.addCustomer(customers);
-        System.out.println("Customer added successfully!");
-    }
 
-    public void displayCustomer() {
-        System.out.println("_______Display Customer__________");
-        company.displayCustomer();
-        System.out.println("Total of customer is: " + company.totalCustomer());
-    }
-
-    public void searchCustomer() {
-        int searchChoice;
-        while (true) {
-            System.out.println("_______SEARCH CUSTOMER_________");
-            System.out.println("1.Search by customer ID");
-            System.out.println("2.Search by name");
-            System.out.println("3.Search by phone");
-            System.out.println("4.Search by date of birth");
-            System.out.println("5.Exit");
-            System.out.println("Enter your choice: ");
-            try {
-                searchChoice = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Wrong input ! Please re-enter");
-                continue;
-            }
-            ArrayList<Customer> searchResults;
-            switch (searchChoice) {
-                case 1:
-                    String customerId = inputString("Search Id: ");
-                    searchResults = company.search(c -> c.getCustomerID().contains(customerId));
-                    if (searchResults.isEmpty()) {
-                        System.out.println("No matching customers found.");
-                    } else {
-                        System.out.println("Search results: ");
-                        for (Customer customer : searchResults) {
-                            System.out.println(customer);
-                        }
-                        System.out.println("Total: " + searchResults.size() + " customer(s)");
-                    }
-                    break;
-
-                case 2:
-                    String name = inputString("Search name: ");
-                    searchResults = company.search(c -> c.getName().contains(name));
-                    if (searchResults.isEmpty()) {
-                        System.out.println("No matching customers found.");
-                    } else {
-                        System.out.println("Search results: ");
-                        for (Customer customer : searchResults) {
-                            System.out.println(customer);
-                        }
-                        System.out.println("Total: " + searchResults.size() + " customer(s)");
-                    }
-                    break;
-                case 3:
-                    String numberPhone = inputString("Phone number Start With ", Regex_number);
-                    ArrayList<Customer> phoneArr = company.search(c -> c.getPhone().contains(numberPhone));
-                    if (phoneArr.isEmpty()) {
-                        System.out.println("No matching customers found.");
-                    } else {
-                        System.out.println("Search results: ");
-                        for (Customer customer : phoneArr) {
-                            System.out.println(customer);
-                        }
-                        System.out.println("Total: " + phoneArr.size() + " customer(s)");
-                    }
-                    break;
-                case 4:
-                    String dateOfBirth = inputString("Search date of birth (dd/mm/yyyy): ", date_regex);
-                    searchResults = company.search(c -> c.getDateOfBirth().contains(dateOfBirth));
-                    if (searchResults.isEmpty()) {
-                        System.out.println("No matching customers found.");
-                    } else {
-                        System.out.println("Search results: ");
-                        for (Customer customer : searchResults) {
-                            System.out.println(customer);
-                        }
-                        System.out.println("Total: " + searchResults.size() + " customer(s)");
-                    }
-                    break;
-                case 5:
-                    break;
-
-                default:
-                    System.out.println("Invalid choice. Return menu.");
-                    return;
-            }
-            if (searchChoice == 4) {
-                break;
-
-            }
-
+        System.out.print("Do you want to continue create employee (Y/N)? ");
+        String continueCreating = scanner.nextLine();
+        if (!continueCreating.equalsIgnoreCase("Y")) {
+            System.out.println("Return!");
         }
     }
 
+       public void viewAllEmployeeInformation() {
+        List<Employee> employees = company.displayEmployees();
+        System.out.println("______EMPLOYEE INFORMATION______");
+        for (Employee employee : employees) {
+            String employeeType = (employee instanceof Doctor) ? "Doctor" : "Nurse";
+            System.out.println("Employee type:" + employeeType + "\nName:"+ employee.getName()+"\nPhone:"+ employee.getPhone()+"\nSalary:"+ employee.calculateTotalSalary());
+        }
+    }
     
-public void deleteCustomer() {
-    System.out.print("Enter the customer ID to delete: ");
-    String customerID = scanner.nextLine();
-    boolean customerFound = false;
-
-    for (int i = 0; i < arrCustomer.size(); i++) {
-        Customer customer = arrCustomer.get(i);
-        if (customer.getCustomerID().equals(customerID)) {
-            arrCustomer.remove(i);
-            customerFound = true;
-            break;
+    public void viewEmployeeWithHighestTotalSalary() {
+        Optional<Employee> employeeWithHighestSalary = company.getEmployeeWithHighestSalary();
+        if (employeeWithHighestSalary.isPresent()) {
+            Employee employee = employeeWithHighestSalary.get();
+            String employeeType = (employee instanceof Doctor) ? "Doctor" : "Nurse";
+            System.out.println("Employee type:" + employeeType + "\nName:"+ employee.getName()+"\nPhone:"+ employee.getPhone()+"\nSalary:"+ employee.calculateTotalSalary());
+        } else {
+            System.out.println("No employees found.");
         }
     }
 
-    if (customerFound) {
-        System.out.println("Customer with ID " + customerID + " deleted successfully.");
-    } else {
-        System.out.println("Customer not found with ID: " + customerID);
+    public void searchEmployeesByName() {
+        ArrayList<Employee> searchResults;
+        String name = inputString("Search name: ");
+        searchResults = company.search(c -> c.getName().contains(name));
+        if (searchResults.isEmpty()) {
+            System.out.println("No matching customers found.");
+        } else {
+            System.out.println("Search results: ");
+            for (Employee employee : searchResults) {
+                System.out.println(employee);
+            }
+            System.out.println("Total: " + searchResults.size() + " employee(s)");
+        }
     }
-}
-
-
-    public void updateCustomerDetails() {
-        scanner.nextLine();
-        System.out.print("Enter the customer ID to update: ");
-        String customerID = scanner.nextLine();
-        System.out.print("Enter the new phone: ");
-        String newPhone = scanner.nextLine();
-        System.out.print("Enter the new date of Birth (dd/MM/yyyy): ");
-        String newDateOfBirth = scanner.nextLine();
-        company.updateCustomerDetails(customerID, newPhone, newDateOfBirth);
-    }
-
 }
